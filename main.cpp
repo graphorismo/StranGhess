@@ -1,19 +1,27 @@
-#include <vector>
+#include <exception>
 #include <ncurses.h>
+#include <iostream>
+
+#include "Game.hpp"
+
+
+
+void mainThread()
+{
+
+}
 
 int main ()
 {
-    std::vector<std::vector<char>> desk =
+    try {
+        Game game("./figures");
+        while (game.IsEnded() == false)
+        {
+            game.Run();
+        }
+    } 
+    catch (const std::exception& exc) 
     {
-        { 2,  3,  4,  5,  6,  4,  3,  2},
-        { 1,  1,  1,  1,  1,  1,  1,  1},
-        { 0,  0,  0,  0,  0,  0,  0,  0},
-        { 0,  0,  0,  0,  0,  0,  0,  0},
-        { 0,  0,  0,  0,  0,  0,  0,  0},
-        { 0,  0,  0,  0,  0,  0,  0,  0},
-        {-1, -1, -1, -1, -1, -1, -1, -1},
-        {-2, -3, -4, -5, -6, -4, -3, -2}
-    };
-
-
+        std::cout<<exc.what();
+    }
 }
