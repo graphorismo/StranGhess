@@ -6,7 +6,7 @@ Game::Game(std::string dirPath)
 
 }
 
-auto Game::Run() -> void
+void Game::Run()
 {
     switch (state) 
     {
@@ -38,7 +38,7 @@ auto Game::Run() -> void
     }
 }
 
-auto Game::IsEnded() -> bool
+bool Game::IsEnded()
 {
     return state == GameStates::EXIT;
 }

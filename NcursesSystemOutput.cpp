@@ -13,12 +13,12 @@ NcursesSystemOutput::~NcursesSystemOutput()
     endwin();
 }
 
-auto NcursesSystemOutput::DrawDesk(std::vector<std::vector<std::int8_t>> placement) -> void
+void NcursesSystemOutput::DrawDesk(std::vector<std::vector<std::int8_t>> placement)
 {
 
 }
 
-auto NcursesSystemOutput::DrawMenu(std::vector<std::string> menuOptions, std::uint8_t chosenOption) -> void
+void NcursesSystemOutput::DrawMenu(std::vector<std::string> menuOptions, std::uint8_t chosenOption)
 {
     for (auto i = 0; i < menuOptions.size(); i++) 
     {

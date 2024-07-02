@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-auto Menu::GetShowedOptions() -> std::vector<std::string>
+std::vector<std::string> Menu::GetShowedOptions()
 {
     std::vector<std::string> showed;
     for (auto id : showedOptionsIds)
@@ -13,7 +13,7 @@ auto Menu::GetShowedOptions() -> std::vector<std::string>
     return showed;
 }
 
-auto Menu::UpdateByInputingSymbol(char symbol) -> void
+void Menu::UpdateByInputingSymbol(char symbol)
 {
     switch (symbol) {
         case 'w':
@@ -42,12 +42,12 @@ auto Menu::UpdateByInputingSymbol(char symbol) -> void
     }
 }
 
-auto Menu::GetChosenOption() -> std::string
+std::string Menu::GetChosenOption()
 {
     return allOptions.at(showedOptionsIds.at(chosenOptionId));
 }
 
-auto Menu::GetChosenOptionRelativeId() -> int8_t
+int8_t Menu::GetChosenOptionRelativeId()
 {
     return std::find(showedOptionsIds.begin(), showedOptionsIds.end(), chosenOptionId) - showedOptionsIds.begin();
 }
@@ -59,7 +59,7 @@ Menu::Menu(std::vector<std::string> allOptions, std::vector<int8_t> startShowedI
 
 }
 
-auto Menu::IsChoicesPathEnded() -> bool
+bool Menu::IsChoicesPathEnded()
 {
     return endFlag;
 }
