@@ -21,6 +21,12 @@ enum class GameStates
 
 class Game
 {
+public:
+    explicit Game(std::string settingsDirPath);
+    bool IsEnded();
+    void Run();
+
+private:
     Menu mainMenu = Menu(
         {"START", "EXIT", "CLASSIC", "BACK"},
         { 0 , 1 },
@@ -54,10 +60,5 @@ class Game
         .sysInput = std::shared_ptr<NcursesSystemInput>(new NcursesSystemInput()),
         .sysOutput = std::shared_ptr<NcursesSystemOutput>(new NcursesSystemOutput())
     };
-    
-public:
-    explicit Game(std::string settingsDirPath);
-    bool IsEnded();
-    void Run();
 
 };

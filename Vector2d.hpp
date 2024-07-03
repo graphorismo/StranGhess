@@ -5,6 +5,7 @@
 template <typename T>
 struct Vector2d
 {
+public:
     T x = 0;
     T y = 0;
 };

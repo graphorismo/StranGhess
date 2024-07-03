@@ -9,6 +9,7 @@
 
 struct PieceStats
 {
+public:
     std::string name;
     Vector2d<int8_t> position {};
     int8_t code = 0;
