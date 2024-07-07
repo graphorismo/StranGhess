@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <string>
-#include <memory>
 
 #include "Menu.hpp"
 #include "Desk.hpp"
@@ -22,7 +21,7 @@ enum class GameStates
 class Game
 {
 public:
-    explicit Game(std::string settingsDirPath);
+    Game(std::string settingsDirPath);
     bool IsEnded();
     void Run();
 

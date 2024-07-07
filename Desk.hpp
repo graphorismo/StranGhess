@@ -4,34 +4,50 @@
 #include <unordered_map>
 #include <vector>
 
+#include "Cursor.hpp"
+#include "Piece.hpp"
+#include "Vector2d.hpp"
 
-struct DeskData
+
+enum class DeskState
 {
+    UNKNOWN = 0,
 
+    WHITE_TURN,
+    BLACK_TURN
 };
 
 
 class Desk
 {
 public:
+    std::vector<std::vector<int8_t>> GetPlacement();
+    void UpdateByInputingSymbol(char symbol);
+    Cursor GetCursor();
 
     class FileParser
     {
     public:
         FileParser(std::string dirPath);
-        DeskData LoadFromDirectory();
-        
+        Desk LoadDesk();
+
     private:
         std::ifstream inputFile;
         std::string directoryPath;
         std::string line;
         std::vector<std::string> lineTokens;
-        std::vector<std::vector<int8_t>> placement;
+        
         std::unordered_map<int, std::string> binds;
     };
+   
+private:
+    int8_t height = 0;
+    int8_t width = 0;
+    DeskState deskState = DeskState::WHITE_TURN;
+    std::unordered_map<Vector2d<int8_t>, Piece> placement;
+    Cursor cursor;
 
-    void LoadFromDirectory(std::string dirPath);
-   
-   
+    
+    void ChangeCursorState();
 
 };

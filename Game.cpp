@@ -3,6 +3,8 @@
 Game::Game(std::string dirPath)
 :state(GameStates::IN_MENU)
 {
+    Desk::FileParser fileParser(dirPath);
+    chessDesk = fileParser.LoadDesk();
 
 }
 
@@ -18,6 +20,7 @@ void Game::Run()
 
             auto symbol = sysInterfaces.sysInput->GetPressedSymbol();
             mainMenu.UpdateByInputingSymbol(symbol);
+
             if(!mainMenu.IsChoicesPathEnded()) break;
             auto option = mainMenu.GetChosenOption();
             if (option == "EXIT") {
@@ -30,7 +33,15 @@ void Game::Run()
         }
 
         case GameStates::ON_DESK:
+        {
+            auto placement = chessDesk.GetPlacement();
+            sysInterfaces.sysOutput->DrawDesk(placement);
+
+            auto symbol = sysInterfaces.sysInput->GetPressedSymbol();
+            chessDesk.UpdateByInputingSymbol(symbol);
+
             break;
+        }
 
         case GameStates::UNKNOWN:
         default:

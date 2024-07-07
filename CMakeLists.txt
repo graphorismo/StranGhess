@@ -15,7 +15,7 @@ add_executable(StranGhess main.cpp
   MoveCode.hpp MoveCode.cpp
   NcursesSystemInput.hpp NcursesSystemInput.cpp
   NcursesSystemOutput.hpp NcursesSystemOutput.cpp
-  PieceStats.hpp PieceStats.cpp
+  Piece.hpp
   SystemInputInterface.hpp
   SystemOutputInterface.hpp
   Vector2d.hpp
