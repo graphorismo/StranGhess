@@ -2,12 +2,25 @@
 
 #include <cstdint>
 
+#include <vector> // included this to be able to specialize std::hash
+
 template <typename T>
 struct Vector2d
 {
 public:
     T x = 0;
     T y = 0;
+};
+
+template<typename T>
+struct std::hash<Vector2d<T>>
+{
+    std::size_t operator()(const Vector2d<T>& vect) const noexcept
+    {
+        std::size_t h1 = std::hash<int8_t>{}(vect.x);
+        std::size_t h2 = std::hash<int8_t>{}(vect.y);
+        return h1 ^ (h2 << 1);
+    }
 };
 
 template<typename T>
