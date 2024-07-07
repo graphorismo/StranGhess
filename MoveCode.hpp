@@ -7,6 +7,7 @@
 
 struct MoveCode
 {
+public:
     Vector2d<int8_t> shift {};
     bool isSlide = false;
 };

@@ -7,6 +7,7 @@
 
 struct SystemInterfaces
 {
+public:
     std::shared_ptr<SystemInputInterface> sysInput;
     std::shared_ptr<SystemOutputInterface> sysOutput;
 };
