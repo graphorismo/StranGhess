@@ -26,10 +26,7 @@ const Piece EMPTY_PIECE =
     .moveCodes = {}
 };
 
-bool operator==(const Piece& left, const Piece& right)
-{
-    return (left.code == right.code);
-}
+bool operator==(const Piece& left, const Piece& right);
 
 template<>
 struct std::hash<Piece>
