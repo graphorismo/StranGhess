@@ -106,11 +106,44 @@ Desk::FileParser::FileParser(std::string dirPath)
 Desk Desk::FileParser::LoadDesk()
 {
     Desk newDesk;
-    std::ifstream inputFile {directoryPath};
+    std::ifstream inputFile (directoryPath+"/placement.json");
+    std::string test;
+    inputFile >> test;
     nlohmann::json fileAsJson = nlohmann::json::parse(inputFile);
-    for(auto line : fileAsJson["placement"])
+    inputFile.close();
+
+    for(auto i = 0; i < fileAsJson["placement"].size(); ++i)
     {
-        
+        auto line = fileAsJson["placement"][i];
+        int8_t y = fileAsJson["placement"].size();
+        for (auto j = 0; j < line.size(); ++j)
+        {
+            int8_t x = line.size();
+            auto position = Vector2d<int8_t>{y, x};
+            newDesk.placement.insert({position, EMPTY_PIECE});
+            newDesk.placement[position].position = position;
+            int8_t code = line[j];
+            newDesk.placement[position].code = code;
+
+            if( code != 0 
+                && fileAsJson["binds"].find(std::to_string(code)) != fileAsJson["binds"].end())
+            {
+               newDesk.placement[position].name = fileAsJson["binds"][std::to_string(code)];
+            }
+            
+        }
+
+        for (auto vectToPiece :newDesk.placement)
+        {
+            auto piece = vectToPiece.second;
+            if (piece.code == 0) continue;
+            inputFile.open(directoryPath+"/"+piece.name+".json");
+            auto pieceJson = nlohmann::json::parse(inputFile);
+            inputFile.close();
+
+        }
+
     }
+
     return newDesk;
 }
