@@ -107,8 +107,6 @@ Desk Desk::FileParser::LoadDesk()
 {
     Desk newDesk;
     std::ifstream inputFile (directoryPath+"/placement.json");
-    std::string test;
-    inputFile >> test;
     nlohmann::json fileAsJson = nlohmann::json::parse(inputFile);
     inputFile.close();
 
