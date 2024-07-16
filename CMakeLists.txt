@@ -24,5 +24,11 @@ add_executable(StranGhess main.cpp
   Vector2d.hpp
 )
 
+if(MSVC)
+  target_compile_options(StranGhess PRIVATE /W4 /WX)
+else()
+  target_compile_options(StranGhess PRIVATE -Wall -Wextra -Wpedantic -Werror)
+endif()
+
 target_link_libraries(StranGhess ncurses nlohmann_json)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/figures DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
