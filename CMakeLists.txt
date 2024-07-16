@@ -14,6 +14,7 @@ add_executable(StranGhess main.cpp
   Desk.hpp Desk.cpp
   Game.hpp Game.cpp
   Menu.hpp Menu.cpp
+  MenuNode.hpp MenuNode.cpp
   MoveCode.hpp MoveCode.cpp
   NcursesSystemInput.hpp NcursesSystemInput.cpp
   NcursesSystemOutput.hpp NcursesSystemOutput.cpp

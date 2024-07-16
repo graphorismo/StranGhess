@@ -1,10 +1,28 @@
 #include "Game.hpp"
+#include "Menu.hpp"
+#include "MenuNode.hpp"
+#include <algorithm>
+#include <memory>
 
 Game::Game(std::string dirPath)
-:state(GameStates::IN_MENU)
+:   state(GameStates::IN_MENU), 
+    mainMenu(std::unique_ptr<Menu>(nullptr))
 {
+    auto mainScreen = std::shared_ptr<MenuNode>(new MenuNode("Main Screen"));
+    auto gameTypeScreen = std::shared_ptr<MenuNode>(new MenuNode("Game Type Screen"));
+
+    mainScreen->AddOption("START", gameTypeScreen, [](){} );
+    mainScreen->AddOption("EXIT", mainScreen, [&](){state = GameStates::EXIT;});
+
+    gameTypeScreen->AddOption("CLASSIC", gameTypeScreen, [&](){state = GameStates::ON_DESK;});
+    gameTypeScreen->AddOption("BACK", mainScreen, [](){} );
+
+    auto menu = std::unique_ptr<Menu>(new Menu({mainScreen, gameTypeScreen}));
+    mainMenu = std::move(menu);
+
     Desk::FileParser fileParser(dirPath);
     chessDesk = fileParser.LoadDesk();
+
 
 }
 
@@ -14,21 +32,14 @@ void Game::Run()
     {
         case GameStates::IN_MENU:
         {
-            auto showedOptions = mainMenu.GetShowedOptions();
-            auto idOfChosen = mainMenu.GetChosenOptionRelativeId();
+            auto showedOptions = mainMenu->GetShowedOptions();
+            auto idOfChosen = std::find(showedOptions.begin(), 
+                                        showedOptions.end(), mainMenu->GetChosenOption()) - showedOptions.begin();
             sysInterfaces.sysOutput->DrawMenu(showedOptions, idOfChosen);
 
             auto symbol = sysInterfaces.sysInput->GetPressedSymbol();
-            mainMenu.UpdateByInputingSymbol(symbol);
+            mainMenu->UpdateByInputingSymbol(symbol);
 
-            if(!mainMenu.IsChoicesPathEnded()) break;
-            auto option = mainMenu.GetChosenOption();
-            if (option == "EXIT") {
-                state = GameStates::EXIT;
-            }
-            else if (option == "CLASSIC") {
-                state = GameStates::ON_DESK;
-            }
             break;
         }
 

@@ -1,7 +1,9 @@
 #pragma once
 
+#include "MenuNode.hpp"
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
@@ -9,17 +11,14 @@
 class Menu
 {
 public:
-    Menu(std::vector<std::string> allOptions, std::vector<int8_t> startShowedIds, std::function<std::vector<int8_t>(const int8_t, bool &)> optionsSwitchRules);
+    Menu(std::vector<std::shared_ptr<MenuNode>> nodes);
     std::vector<std::string> GetShowedOptions();
     std::string GetChosenOption();
-    int8_t GetChosenOptionRelativeId();
     void UpdateByInputingSymbol(char symbol);
     bool IsChoicesPathEnded();
 
 private:
-    std::vector<std::string> allOptions;
-    std::vector<int8_t> showedOptionsIds;
-    int8_t chosenOptionId;
-    std::function<std::vector<int8_t>(const int8_t, bool &)> optionsSwitchRules;
-    bool endFlag = false;
+    
+    std::vector<std::shared_ptr<MenuNode>> nodes;
+    std::shared_ptr<MenuNode> currentNode;
 };

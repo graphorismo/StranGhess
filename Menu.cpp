@@ -5,36 +5,32 @@
 
 std::vector<std::string> Menu::GetShowedOptions()
 {
-    std::vector<std::string> showed;
-    for (auto id : showedOptionsIds)
-    {
-        showed.emplace_back(allOptions.at(id));
-    }
-    return showed;
+    return currentNode->GetOptions();
 }
 
 void Menu::UpdateByInputingSymbol(char symbol)
 {
+    auto allOptions = currentNode->GetOptions();
+    auto chosenOption = currentNode->GetChosenOption();
+    auto optionIter = std::find(allOptions.begin(), allOptions.end(), chosenOption);
+
+    if (optionIter == allOptions.end()) currentNode = nodes.at(0);
+
     switch (symbol) {
         case 'w':
-            if(chosenOptionId == 0) break;
-            chosenOptionId--;
+            if(optionIter == allOptions.begin()) break;
+            optionIter--;
             break;
 
         case 's': 
-            if(chosenOptionId == showedOptionsIds.size()-1) break;
-            chosenOptionId++;
+            if(optionIter == (allOptions.end()--)) break;
+            optionIter++;
             break;
 
         case 'f':
         {
-            auto ids = optionsSwitchRules(chosenOptionId, endFlag);
-            if (ids.size() > 0)
-            {
-                showedOptionsIds = ids;
-                chosenOptionId = ids[0];
-            }
-            break;
+            currentNode->ChooseOption(*optionIter);
+            currentNode = currentNode->GetChosenMenuNode();
         }
 
         default:
@@ -44,22 +40,12 @@ void Menu::UpdateByInputingSymbol(char symbol)
 
 std::string Menu::GetChosenOption()
 {
-    return allOptions.at(showedOptionsIds.at(chosenOptionId));
+    return currentNode->GetChosenOption();
 }
 
-int8_t Menu::GetChosenOptionRelativeId()
-{
-    return std::find(showedOptionsIds.begin(), showedOptionsIds.end(), chosenOptionId) - showedOptionsIds.begin();
-}
-
-Menu::Menu(std::vector<std::string> allOptions, std::vector<int8_t> startShowedIds, std::function<std::vector<int8_t>(const int8_t, bool &)> optionsSwitchRules)
- :  allOptions(allOptions), showedOptionsIds(startShowedIds), 
-    optionsSwitchRules(optionsSwitchRules), chosenOptionId(0)
+Menu::Menu(std::vector<std::shared_ptr<MenuNode>> nodes)
+:   nodes(nodes), 
+    currentNode(nodes.at(0))
 {
 
-}
-
-bool Menu::IsChoicesPathEnded()
-{
-    return endFlag;
 }
