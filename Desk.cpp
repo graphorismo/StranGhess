@@ -1,7 +1,9 @@
+#include <cmath>
 #include <cstdint>
 #include <fstream>
 #include <nlohmann/json_fwd.hpp>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include "Cursor.hpp"
@@ -11,8 +13,7 @@
 
 std::vector<std::vector<int8_t>> Desk::GetPlacement()
 {
-    std::vector<std::vector<int8_t>> transformedPlacement (height);
-    for (auto vec : transformedPlacement) vec.resize(width);
+    std::vector<std::vector<int8_t>> transformedPlacement (height, std::vector<int8_t>(width, 0));
 
     for(int8_t i = 0; i < height; ++i)
     {
@@ -110,18 +111,19 @@ Desk Desk::FileParser::LoadDesk()
     nlohmann::json fileAsJson = nlohmann::json::parse(inputFile);
     inputFile.close();
 
-    for(auto i = 0; i < fileAsJson["placement"].size(); ++i)
+    newDesk.height = fileAsJson["placement"].size();
+    newDesk.width = fileAsJson["placement"][0].size();
+
+    for(auto i = 0; i < newDesk.height; ++i)
     {
         auto line = fileAsJson["placement"][i];
-        int8_t y = fileAsJson["placement"].size();
-        for (auto j = 0; j < line.size(); ++j)
+        for (auto j = 0; j < newDesk.width; ++j)
         {
-            int8_t x = line.size();
-            auto position = Vector2d<int8_t>{y, x};
+            auto position = Vector2d<int8_t>{static_cast<signed char>(i), static_cast<signed char>(j)};
             newDesk.placement.insert({position, EMPTY_PIECE});
             newDesk.placement[position].position = position;
-            int8_t code = line[j];
-            newDesk.placement[position].code = code;
+            newDesk.placement[position].code = line[j];
+            int8_t code = std::abs(static_cast<int>(line[j]));
 
             if( code != 0 
                 && fileAsJson["binds"].find(std::to_string(code)) != fileAsJson["binds"].end())
@@ -131,15 +133,18 @@ Desk Desk::FileParser::LoadDesk()
             
         }
 
-        for (auto vectToPiece :newDesk.placement)
-        {
-            auto piece = vectToPiece.second;
-            if (piece.code == 0) continue;
-            inputFile.open(directoryPath+"/"+piece.name+".json");
-            auto pieceJson = nlohmann::json::parse(inputFile);
-            inputFile.close();
+    }
 
-        }
+    std::unordered_set<int8_t> loadedPieces;
+    for (auto vectToPiece :newDesk.placement)
+    {
+        auto piece = vectToPiece.second;
+        if (piece.code == 0
+            || loadedPieces.find(piece.code) != loadedPieces.end()) continue;
+        inputFile.open(directoryPath+"/"+piece.name+".json");
+        auto pieceJson = nlohmann::json::parse(inputFile);
+        inputFile.close();
+        loadedPieces.insert(piece.code);
 
     }
 
