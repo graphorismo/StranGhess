@@ -15,7 +15,7 @@ enum class CursorState
 struct Cursor
 {
 public:
-    CursorState state;
-    Vector2d<int8_t> position;
-    Piece pickedPiece;
+    CursorState state = CursorState::FREE;
+    Vector2d<int8_t> position = {0,0};
+    Piece pickedPiece = EMPTY_PIECE;
 };
