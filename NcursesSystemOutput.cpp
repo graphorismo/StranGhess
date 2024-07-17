@@ -27,9 +27,9 @@ void NcursesSystemOutput::DrawDesk(std::vector<std::vector<std::int8_t>> placeme
         {
             if(Vector2d<int8_t>{static_cast<signed char>(j), static_cast<signed char>(i)} == cursor)
             {
-                mvprintw(i*2, j*3, "%s", std::string("%").data());
+                mvprintw(i*2, j*5, "%s", std::string("%").data());
             }
-            else mvprintw(i*2, j*3, "%s", std::to_string(placement[i][j]).data());
+            else mvprintw(i*2, j*5, "%s", std::to_string(placement[i][j]).data());
         }
     }
     refresh();
