@@ -40,20 +40,20 @@ void Desk::ChangeCursorState()
 
     if (cursor.state == CursorState::FREE) 
     {
-        bool didChooseRightPiece = placement.at(cursor.position).code*mod > 0;
+        auto pickedPiece = placement.at({cursor.position.y, cursor.position.x});
+        bool didChooseRightPiece = pickedPiece.code*mod > 0;
         if (!didChooseRightPiece) return;
 
-        auto pickedPiece = placement.at(cursor.position);
         if (pickedPiece == EMPTY_PIECE) return;
 
-        placement[cursor.position] = EMPTY_PIECE;
+        placement[{cursor.position.y, cursor.position.x}] = EMPTY_PIECE;
         cursor.pickedPiece = pickedPiece;
 
         cursor.state = CursorState::WITH_PIECE;
     }
     else if (cursor.state == CursorState::WITH_PIECE)
     {
-        auto targetedPiece = placement.at(cursor.position);
+        auto targetedPiece = placement.at({cursor.position.y, cursor.position.x});
         auto attackingPiece = cursor.pickedPiece;
 
         if (attackingPiece == EMPTY_PIECE) return;
@@ -61,7 +61,7 @@ void Desk::ChangeCursorState()
         if (targetedPiece == EMPTY_PIECE 
             || targetedPiece.code * attackingPiece.code < 0)
         {
-            placement[cursor.position] = attackingPiece;
+            placement[{cursor.position.y, cursor.position.x}] = attackingPiece;
             cursor.pickedPiece = EMPTY_PIECE;
             cursor.state = CursorState::FREE;
             return;
