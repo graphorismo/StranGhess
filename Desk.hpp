@@ -21,7 +21,7 @@ enum class DeskState
 class Desk
 {
 public:
-    std::vector<std::vector<int8_t>> GetPlacement();
+    std::vector<std::vector<char>> GetPlacement();
     void UpdateByInputingSymbol(char symbol);
     Cursor GetCursor();
 

@@ -1,3 +1,4 @@
+#include <cctype>
 #include <cmath>
 #include <cstdint>
 #include <fstream>
@@ -11,15 +12,21 @@
 #include "Piece.hpp"
 #include "nlohmann/json.hpp"
 
-std::vector<std::vector<int8_t>> Desk::GetPlacement()
+std::vector<std::vector<char>> Desk::GetPlacement()
 {
-    std::vector<std::vector<int8_t>> transformedPlacement (height, std::vector<int8_t>(width, 0));
+    std::vector<std::vector<char>> transformedPlacement (height, std::vector<char>(width, '_'));
 
     for(int8_t i = 0; i < height; ++i)
     {
         for (int8_t j = 0; j < width; ++j)
         {
-            transformedPlacement[i][j] = placement.at({i, j}).code;
+            char symbol = placement.at({i, j}).name[0];
+            auto code = placement.at({i, j}).code;
+
+            if (code < 0) symbol = std::toupper(symbol);
+            else if (code > 0) symbol = std::tolower(symbol);
+
+            transformedPlacement[i][j] = symbol;
         }
     }
     return transformedPlacement;

@@ -19,7 +19,7 @@ public:
 
 const Piece EMPTY_PIECE = 
 {
-    .name = "",
+    .name = "_",
     .position = {-1, -1},
     .code = 0,
     .number = 0,

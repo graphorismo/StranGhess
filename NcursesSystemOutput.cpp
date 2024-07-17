@@ -17,7 +17,7 @@ NcursesSystemOutput::~NcursesSystemOutput()
     endwin();
 }
 
-void NcursesSystemOutput::DrawDesk(std::vector<std::vector<std::int8_t>> placement, Vector2d<int8_t> cursor)
+void NcursesSystemOutput::DrawDesk(std::vector<std::vector<char>> placement, Vector2d<int8_t> cursor)
 {
     clear();
     for (size_t i = 0; i < placement.size(); ++i)
@@ -29,7 +29,7 @@ void NcursesSystemOutput::DrawDesk(std::vector<std::vector<std::int8_t>> placeme
             {
                 mvprintw(i*2, j*5, "%s", std::string("%").data());
             }
-            else mvprintw(i*2, j*5, "%s", std::to_string(placement[i][j]).data());
+            else mvprintw(i*2, j*5, "%c", placement[i][j]);
         }
     }
     refresh();
