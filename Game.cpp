@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "Cursor.hpp"
 #include "Menu.hpp"
 #include "MenuNode.hpp"
 #include <algorithm>
@@ -46,7 +47,8 @@ void Game::Run()
         case GameStates::ON_DESK:
         {
             auto placement = chessDesk.GetPlacement();
-            sysInterfaces.sysOutput->DrawDesk(placement);
+            auto cursor = chessDesk.GetCursor();
+            sysInterfaces.sysOutput->DrawDesk(placement, cursor.position);
 
             auto symbol = sysInterfaces.sysInput->GetPressedSymbol();
             chessDesk.UpdateByInputingSymbol(symbol);

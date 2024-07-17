@@ -97,6 +97,10 @@ void Desk::UpdateByInputingSymbol(char symbol)
     }
 }
 
+Cursor Desk::GetCursor()
+{
+    return cursor;
+}
 
 Desk::FileParser::FileParser(std::string dirPath)
 :directoryPath(dirPath)
