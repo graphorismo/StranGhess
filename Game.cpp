@@ -5,8 +5,8 @@
 #include <memory>
 
 Game::Game(std::string dirPath)
-:   state(GameStates::IN_MENU), 
-    mainMenu(std::unique_ptr<Menu>(nullptr))
+:   mainMenu(std::unique_ptr<Menu>(nullptr)),
+    state(GameStates::IN_MENU)
 {
     auto mainScreen = std::shared_ptr<MenuNode>(new MenuNode("Main Screen"));
     auto gameTypeScreen = std::shared_ptr<MenuNode>(new MenuNode("Game Type Screen"));
