@@ -35,7 +35,7 @@ void Game::Run()
         {
             auto showedOptions = mainMenu->GetShowedOptions();
             auto idOfChosen = std::find(showedOptions.begin(), 
-                                        showedOptions.end(), mainMenu->GetChosenOption()) - showedOptions.begin();
+                                        showedOptions.end(), mainMenu->GetSelectedOption()) - showedOptions.begin();
             sysInterfaces.sysOutput->DrawMenu(showedOptions, idOfChosen);
 
             auto symbol = sysInterfaces.sysInput->GetPressedSymbol();

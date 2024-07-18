@@ -11,8 +11,8 @@ std::vector<std::string> Menu::GetShowedOptions()
 void Menu::UpdateByInputingSymbol(char symbol)
 {
     auto allOptions = currentNode->GetOptions();
-    auto chosenOption = currentNode->GetChosenOption();
-    auto optionIter = std::find(allOptions.begin(), allOptions.end(), chosenOption);
+    auto selectedOption = currentNode->GetSelectedOption();
+    auto optionIter = std::find(allOptions.begin(), allOptions.end(), selectedOption);
 
     if (optionIter == allOptions.end()) currentNode = nodes.at(0);
 
@@ -20,16 +20,18 @@ void Menu::UpdateByInputingSymbol(char symbol)
         case 'w':
             if(optionIter == allOptions.begin()) break;
             optionIter--;
+            currentNode->SelectOption(*optionIter);
             break;
 
         case 's': 
             if(optionIter == (allOptions.end()--)) break;
             optionIter++;
+            currentNode->SelectOption(*optionIter);
             break;
 
         case 'f':
         {
-            currentNode->ChooseOption(*optionIter);
+            currentNode->ChooseSelectedOption();
             currentNode = currentNode->GetChosenMenuNode();
         }
 
@@ -38,9 +40,9 @@ void Menu::UpdateByInputingSymbol(char symbol)
     }
 }
 
-std::string Menu::GetChosenOption()
+std::string Menu::GetSelectedOption()
 {
-    return currentNode->GetChosenOption();
+    return currentNode->GetSelectedOption();
 }
 
 Menu::Menu(std::vector<std::shared_ptr<MenuNode>> nodes)

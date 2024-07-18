@@ -15,9 +15,9 @@ std::string MenuNode::GetName()
     return name;
 }
 
-std::string MenuNode::GetChosenOption()
+std::string MenuNode::GetSelectedOption()
 {
-    return options[chosenOptionId];
+    return options[selectedOptionId];
 }
 
 std::vector<std::string> MenuNode::GetOptions()
@@ -27,17 +27,19 @@ std::vector<std::string> MenuNode::GetOptions()
 
 std::shared_ptr<MenuNode> MenuNode::GetChosenMenuNode()
 {
-    return nodes[chosenOptionId];
+    return nodes[selectedOptionId];
 }
 
-void MenuNode::ChooseOption(std::string option)
+void MenuNode::SelectOption(std::string option)
 {
     auto findResult = std::find(options.begin(), options.end(), option);
-    if(findResult != options.end())
-    {
-        chosenOptionId = findResult - options.begin();
-        actions[chosenOptionId]();
-    }
+    if ( findResult == options.end()) return;
+    selectedOptionId = findResult - options.begin();
+}
+
+void MenuNode::ChooseSelectedOption()
+{
+    actions[selectedOptionId]();
 }
 
 void MenuNode::AddOption(std::string optionName, std::shared_ptr<MenuNode> linkedNode, std::function<void()> action)

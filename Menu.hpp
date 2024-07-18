@@ -13,7 +13,7 @@ class Menu
 public:
     Menu(std::vector<std::shared_ptr<MenuNode>> nodes);
     std::vector<std::string> GetShowedOptions();
-    std::string GetChosenOption();
+    std::string GetSelectedOption();
     void UpdateByInputingSymbol(char symbol);
     bool IsChoicesPathEnded();
 

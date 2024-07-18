@@ -12,17 +12,18 @@ public:
     MenuNode(std::string name);
 
     std::string GetName();
-    std::string GetChosenOption();
+    std::string GetSelectedOption();
     std::shared_ptr<MenuNode> GetChosenMenuNode();
     std::vector<std::string> GetOptions();
-    void ChooseOption(std::string option);
+    void SelectOption(std::string option);
+    void ChooseSelectedOption();
 
     void AddOption(std::string optionName, std::shared_ptr<MenuNode> linkedNode, std::function<void()> action);
 
 private:
     std::string name;
     std::vector<std::string> options;
+    int selectedOptionId = 0;
     std::vector<std::function<void()>> actions;
-    int chosenOptionId = 0;
     std::vector<std::shared_ptr<MenuNode>> nodes;
 };
