@@ -11,6 +11,7 @@ find_package(Curses REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
 add_executable(StranGhess main.cpp
+  Cursor.hpp
   Desk.hpp Desk.cpp
   Game.hpp Game.cpp
   Menu.hpp Menu.cpp
@@ -20,6 +21,7 @@ add_executable(StranGhess main.cpp
   NcursesSystemOutput.hpp NcursesSystemOutput.cpp
   Piece.hpp Piece.cpp
   SystemInputInterface.hpp
+  SystemInterfaces.hpp
   SystemOutputInterface.hpp
   Vector2d.hpp
 )

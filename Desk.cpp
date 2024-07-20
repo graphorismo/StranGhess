@@ -63,12 +63,25 @@ void Desk::ChangeCursorState()
 
         if (attackingPiece == EMPTY_PIECE) return;
 
+        auto shift = targetedPiece.position - attackingPiece.position;
         if (targetedPiece == EMPTY_PIECE 
-            || targetedPiece.code * attackingPiece.code < 0)
+            && attackingPiece.CanMoveThatWay(shift))
         {
             placement[{cursor.position.y, cursor.position.x}] = attackingPiece;
             cursor.pickedPiece = EMPTY_PIECE;
             cursor.state = CursorState::FREE;
+            if (deskState == DeskState::WHITE_TURN) deskState = DeskState::BLACK_TURN;
+            else deskState = DeskState::WHITE_TURN;
+            return;
+        }
+        if (targetedPiece.code * attackingPiece.code < 0
+            && attackingPiece.CanAttackThatWay(shift))
+        {
+            placement[{cursor.position.y, cursor.position.x}] = attackingPiece;
+            cursor.pickedPiece = EMPTY_PIECE;
+            cursor.state = CursorState::FREE;
+            if (deskState == DeskState::WHITE_TURN) deskState = DeskState::BLACK_TURN;
+            else deskState = DeskState::WHITE_TURN;
             return;
         }
     }
@@ -169,25 +182,27 @@ Desk Desk::FileParser::LoadDesk()
         for (auto moveJson : pieceJson["move"])
         {
             std::vector<int8_t> rawCode = {moveJson[0], moveJson[1], moveJson[2]};
-            auto moveCode =MoveCode{static_cast<bool>(rawCode[0]), {rawCode[2], rawCode[1]}};
+            auto moveCode =MoveCode{static_cast<bool>(rawCode[0]), {rawCode[1], rawCode[2]}};
             moves.emplace_back(moveCode);
         }
         if (pieceJson["attack"] == "move") attacks = moves;
         else for (auto attackJson : pieceJson["move"])
         {
             std::vector<int8_t> rawCode = {attackJson[0], attackJson[1], attackJson[2]};
-            auto moveCode =MoveCode{static_cast<bool>(rawCode[0]), {rawCode[2], rawCode[1]}};
+            auto moveCode =MoveCode{static_cast<bool>(rawCode[0]), {rawCode[1], rawCode[2]}};
             attacks.emplace_back(moveCode);
         }
-        if (std::find(pieceJson.begin(), pieceJson.end(), "first move") != pieceJson.end())
+        if (pieceJson.find("first move") != pieceJson.end()
+            && pieceJson["first move"] != "move")
         {
             for (auto firstMoveJson : pieceJson["first move"])
             {
                 std::vector<int8_t> rawCode = {firstMoveJson[0], firstMoveJson[1], firstMoveJson[2]};
-                auto moveCode =MoveCode{static_cast<bool>(rawCode[0]), {rawCode[2], rawCode[1]}};
+                auto moveCode =MoveCode{static_cast<bool>(rawCode[0]), {rawCode[1], rawCode[2]}};
                 firstMoves.emplace_back(moveCode);
             }
         }
+        else firstMoves = moves;
         codeToMoveCodes.insert({piece.code, { attacks, moves, firstMoves}});
     }
 
