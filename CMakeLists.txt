@@ -10,20 +10,20 @@ set(CMAKE_CXX_STANDARD 23)
 find_package(Curses REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
-add_executable(StranGhess main.cpp
-  Cursor.hpp
-  Desk.hpp Desk.cpp
-  Game.hpp Game.cpp
-  Menu.hpp Menu.cpp
-  MenuNode.hpp MenuNode.cpp
-  MoveCode.hpp MoveCode.cpp
-  NcursesSystemInput.hpp NcursesSystemInput.cpp
-  NcursesSystemOutput.hpp NcursesSystemOutput.cpp
-  Piece.hpp Piece.cpp
-  SystemInputInterface.hpp
-  SystemInterfaces.hpp
-  SystemOutputInterface.hpp
-  Vector2d.hpp
+add_executable(StranGhess src/main.cpp
+  src/Cursor.hpp
+  src/Desk.hpp src/Desk.cpp
+  src/Game.hpp src/Game.cpp
+  src/Menu.hpp src/Menu.cpp
+  src/MenuNode.hpp src/MenuNode.cpp
+  src/MoveCode.hpp src/MoveCode.cpp
+  src/NcursesSystemInput.hpp src/NcursesSystemInput.cpp
+  src/NcursesSystemOutput.hpp src/NcursesSystemOutput.cpp
+  src/Piece.hpp src/Piece.cpp
+  src/SystemInputInterface.hpp
+  src/SystemInterfaces.hpp
+  src/SystemOutputInterface.hpp
+  src/Vector2d.hpp
 )
 
 if(MSVC)
