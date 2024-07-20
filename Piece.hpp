@@ -14,7 +14,9 @@ public:
     Vector2d<int8_t> position {};
     int8_t code = 0;
     int8_t number = 0;
-    std::unordered_set<MoveCode> moveCodes {};
+    std::vector<MoveCode> attackCodes {};
+    std::vector<MoveCode> moveCodes {};
+    std::vector<MoveCode> firstMoveCodes {};
 };
 
 const Piece EMPTY_PIECE = 
@@ -23,7 +25,9 @@ const Piece EMPTY_PIECE =
     .position = {-1, -1},
     .code = 0,
     .number = 0,
-    .moveCodes = {}
+    .attackCodes = {},
+    .moveCodes = {},
+    .firstMoveCodes = {}
 };
 
 bool operator==(const Piece& left, const Piece& right);

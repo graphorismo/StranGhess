@@ -1,14 +1,19 @@
+#include <algorithm>
 #include <cctype>
 #include <cmath>
 #include <cstdint>
 #include <fstream>
 #include <nlohmann/json_fwd.hpp>
 #include <string>
+#include <tuple>
+#include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 #include "Cursor.hpp"
 #include "Desk.hpp"
+#include "MoveCode.hpp"
 #include "Piece.hpp"
 #include "nlohmann/json.hpp"
 
@@ -141,12 +146,13 @@ Desk Desk::FileParser::LoadDesk()
             {
                newDesk.placement[position].name = fileAsJson["binds"][std::to_string(code)];
             }
-            
         }
-
     }
 
     std::unordered_set<int8_t> loadedPieces;
+    std::unordered_map<int8_t, std::tuple<  std::vector<MoveCode>, 
+                                            std::vector<MoveCode>, 
+                                            std::vector<MoveCode>  > > codeToMoveCodes; //tuple for an  attack, a move and a first move
     for (auto vectToPiece :newDesk.placement)
     {
         auto piece = vectToPiece.second;
@@ -157,6 +163,42 @@ Desk Desk::FileParser::LoadDesk()
         inputFile.close();
         loadedPieces.insert(piece.code);
 
+        std::vector<MoveCode> attacks;
+        std::vector<MoveCode> moves; 
+        std::vector<MoveCode> firstMoves;
+        for (auto moveJson : pieceJson["move"])
+        {
+            std::vector<int8_t> rawCode = {moveJson[0], moveJson[1], moveJson[2]};
+            auto moveCode =MoveCode{static_cast<bool>(rawCode[0]), {rawCode[2], rawCode[1]}};
+            moves.emplace_back(moveCode);
+        }
+        if (pieceJson["attack"] == "move") attacks = moves;
+        else for (auto attackJson : pieceJson["move"])
+        {
+            std::vector<int8_t> rawCode = {attackJson[0], attackJson[1], attackJson[2]};
+            auto moveCode =MoveCode{static_cast<bool>(rawCode[0]), {rawCode[2], rawCode[1]}};
+            attacks.emplace_back(moveCode);
+        }
+        if (std::find(pieceJson.begin(), pieceJson.end(), "first move") != pieceJson.end())
+        {
+            for (auto firstMoveJson : pieceJson["first move"])
+            {
+                std::vector<int8_t> rawCode = {firstMoveJson[0], firstMoveJson[1], firstMoveJson[2]};
+                auto moveCode =MoveCode{static_cast<bool>(rawCode[0]), {rawCode[2], rawCode[1]}};
+                firstMoves.emplace_back(moveCode);
+            }
+        }
+        codeToMoveCodes.insert({piece.code, { attacks, moves, firstMoves}});
+    }
+
+    for (auto vectToPiece : newDesk.placement)
+    {
+        newDesk.placement[vectToPiece.first].attackCodes = 
+            std::get<0>(codeToMoveCodes[std::abs(static_cast<int>(vectToPiece.second.code))]);
+        newDesk.placement[vectToPiece.first].moveCodes = 
+            std::get<1>(codeToMoveCodes[std::abs(static_cast<int>(vectToPiece.second.code))]);
+        newDesk.placement[vectToPiece.first].firstMoveCodes = 
+            std::get<2>(codeToMoveCodes[std::abs(static_cast<int>(vectToPiece.second.code))]);
     }
 
     return newDesk;
